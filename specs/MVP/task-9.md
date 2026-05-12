@@ -1,42 +1,51 @@
-# Task 9: Action Buttons
+# Task 9: Main Page Composition
 
 ## Task Overview
-Add Run and Clear buttons at the bottom of the Result section to trigger the VLM request and clear bounding boxes.
+Compose the main page layout with Preview section (left 50%) and Result section (right 50%).
 
 ## Dependencies
-- Task 7: Prompt Editor
-- Task 8: Prompt Editor
+Task 1: Project Setup, Task 2: File Upload, Task 4: Image Preview, Task 5: Prompt Editor, Task 6: API Integration, Task 7: Bounding Box Rendering, Task 8: Clear/Reset
 
 ## External Libraries Required
 None
 
 ## Pseudo Code - Main Flow
-
 ```
-1. Create ActionButtons component
-2. Render two buttons:
-   - "Run" button (primary style)
-   - "Clear" button (secondary style)
-3. Run button:
-   - Disabled when no prompt or no image
-   - On click: call API with prompt and image
-   - Show loading spinner while processing
-   - Display results when complete
-4. Clear button:
-   - On click: clear all bounding boxes from preview
-   - Reset any result state
-5. Position buttons at bottom of Result section
+1. Create MainPage component
+   - Split layout into left (50%) and right (50%)
+   - Left: Preview section
+     - FileListSidebar (20%)
+     - PreviewArea (80%)
+   - Right: Result section
+     - PromptEditor (majority)
+     - ActionButtons (bottom)
+
+2. Integrate all state
+   - Connect file selection to preview
+   - Connect Run button to API
+   - Connect API response to bbox rendering
+   - Connect Clear button to state reset
+
+3. Add global styles
+   - Ensure 50/50 split works
+   - Proper spacing and borders
+   - Responsive behavior
 ```
 
 ## File Structure
 ```
-/components
-  /ActionButtons.tsx  - Run and Clear buttons
+/src/app/page.tsx (update to compose main layout)
+/src/components
+  MainPage.tsx (if separate component)
+  PreviewSection.tsx
+  ResultSection.tsx
 ```
 
 ## Acceptance Criteria
-- [ ] Run button triggers API call with prompt and image
-- [ ] Run button disabled when no prompt or no image
-- [ ] Clear button removes all bounding boxes
-- [ ] Loading state shown during API call
-- [ ] Buttons styled consistently with app theme
+- [ ] Page renders with 50/50 split layout
+- [ ] Preview section shows file list and image
+- [ ] Result section shows prompt editor and buttons
+- [ ] File selection updates preview
+- [ ] Run button triggers detection
+- [ ] Clear button removes boxes
+- [ ] All components work together correctly

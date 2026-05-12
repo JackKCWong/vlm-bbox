@@ -1,35 +1,41 @@
-# MVP Task List
+# Task List Summary
 
-## Task Overview
+## External Dependencies
 
-This application is a web app for testing a VLM's ability to return bounding boxes. It features drag-and-drop file upload, PDF-to-image conversion, and interactive bounding box visualization.
+| Library | Version | Purpose |
+|---------|---------|---------|
+| next | 14+ | Framework |
+| react | 18+ | UI library |
+| typescript | 5+ | Type safety |
+| pdf-lib | ^1.17.1 | PDF manipulation |
+| pdfjs-dist | ^4.0.379 | PDF rendering (browser) |
+| react-dropzone | ^14.2.3 | Drag & drop file upload |
+| @uiw/react-md-editor | ^4.0.0 | Markdown editor |
+| axios | ^1.6.0 | HTTP client |
+| zustand | ^4.4.0 | State management |
 
-## Task Breakdown
+## Task Order
 
-| Order | Task | Description | Dependencies |
-|-------|------|-------------|--------------|
-| 1 | Project Setup | Initialize Next.js project, install dependencies (PDF.js, react-dropzone, etc.) | None |
-| 2 | UI Layout | Create main page with 50/50 horizontal split (Preview 50%, Result 50%) | None |
-| 3 | File Upload | Implement drag-and-drop zone for PDF/image files | 1 |
-| 4 | File List Sidebar | Create 20% width sidebar with filename list, selection, and remove (X) functionality | 2, 3 |
-| 5 | Image Preview | Display selected image (or PDF pages) in preview area with navigator | 2, 4 |
-| 6 | PDF Conversion | Convert PDF pages to images in browser, cache to localStorage | 3, 5 |
-| 7 | Metadata Status Bar | Show image dimensions, file size at bottom of Preview section | 5 |
-| 8 | Prompt Editor | Create markdown editor in Result section | 2 |
-| 9 | Action Buttons | Add Run and Clear buttons at bottom of Result section | 7, 8 |
-| 10 | Backend API | Create API endpoint to send images to VLM and return bounding boxes | 1 |
-| 11 | Bounding Box Rendering | Draw bounding boxes with labels on image preview | 5, 10 |
-| 12 | Clear Functionality | Remove bounding boxes from current image | 11 |
+| # | Task | Description |
+|---|------|-------------|
+| 1 | Project Setup | Initialize Next.js with TypeScript, install dependencies, create folder structure and Zustand store |
+| 2 | File Upload Component | Drag & drop zone, file list sidebar with selection and removal |
+| 3 | PDF to Image Conversion | Browser-based PDF rendering with localStorage caching |
+| 4 | Image Preview with Navigator | Display images/PDF pages, page navigation, metadata status bar |
+| 5 | Prompt Editor | Markdown editor with Run and Clear buttons |
+| 6 | Backend API Integration | API route for VLM communication, bounding box parsing |
+| 7 | Bounding Box Rendering | Overlay boxes with labels on image preview |
+| 8 | Clear/Reset Functionality | Clear button removes bounding boxes |
+| 9 | Main Page Composition | Compose 50/50 layout with all components integrated |
 
-## Acceptance Criteria
+## Implementation Order Rationale
 
-- [ ] Drag and drop multiple PDF/image files
-- [ ] Display filenames on left (20% width), preview on right (80% width)
-- [ ] Select file by clicking name, remove by X button
-- [ ] PDF files converted to images in browser, cached in localStorage
-- [ ] PDF navigator shows current page and prev/next buttons
-- [ ] Image files displayed directly in preview
-- [ ] Metadata status bar shows height, width, file size
-- [ ] Prompt editor is a markdown editor
-- [ ] Run button sends image(s) to backend, Clear button removes bboxes
-- [ ] Bounding boxes with labels drawn on image preview after VLM response
+1. **Task 1 (Project Setup)** - Foundation for everything else
+2. **Task 2 (File Upload)** - Users need to upload files before anything else
+3. **Task 3 (PDF Conversion)** - Depends on upload to get PDF files
+4. **Task 4 (Image Preview)** - Depends on upload and PDF conversion
+5. **Task 5 (Prompt Editor)** - Can be built in parallel with tasks 2-4 since it's independent
+6. **Task 6 (Backend API)** - Backend work, independent of UI
+7. **Task 7 (Bounding Box Rendering)** - Needs preview component from Task 4 and API from Task 6
+8. **Task 8 (Clear/Reset)** - Small addition, depends on Task 7
+9. **Task 9 (Main Page)** - Integration task, depends on all previous tasks

@@ -1,43 +1,38 @@
-# Task 8: Prompt Editor
+# Task 8: Clear/Reset Functionality
 
 ## Task Overview
-Create a markdown editor in the Result section for users to input prompts.
+Implement Clear button to remove bounding boxes from the current image preview.
 
 ## Dependencies
-- Task 2: UI Layout
+Task 1: Project Setup, Task 7: Bounding Box Rendering
 
 ## External Libraries Required
-| Library | Version | Purpose |
-|---------|---------|---------|
-| react-markdown | ^9.x | Markdown rendering and editing |
-| remark-gfm | ^4.x | GitHub-flavored markdown support |
+None
 
 ## Pseudo Code - Main Flow
-
 ```
-1. Create PromptEditor component
-2. Use textarea as base for editing
-3. Add markdown preview toggle:
-   - Edit mode: raw markdown text
-   - Preview mode: rendered markdown
-4. Style the editor to match app theme
-5. Provide placeholder text:
-   - "Enter your prompt here..."
-6. Support common markdown:
-   - Headers, bold, italic
-   - Lists, code blocks
-7. Make it resizable vertically
+1. Update Zustand store
+   - Add clearBoundingBoxes action
+   - Reset boxes array to empty
+
+2. Update ResultSection component
+   - Wire Clear button to store action
+   - Call clearBoundingBoxes on click
+
+3. Update BoundingBoxOverlay
+   - Handle empty boxes array (render nothing)
 ```
 
 ## File Structure
 ```
-/components
-  /PromptEditor.tsx   - Markdown prompt editor
+/src/store
+  useAppStore.ts
+/src/components
+  ResultSection.tsx (update)
 ```
 
 ## Acceptance Criteria
-- [ ] Editor accepts and displays markdown text
-- [ ] Preview mode renders markdown formatted
-- [ ] Placeholder text displayed when empty
-- [ ] Editor is resizable vertically
-- [ ] Styled consistently with app theme
+- [ ] Clear button click removes all bounding boxes
+- [ ] Image preview remains visible
+- [ ] Store state updates correctly
+- [ ] UI reflects cleared state immediately

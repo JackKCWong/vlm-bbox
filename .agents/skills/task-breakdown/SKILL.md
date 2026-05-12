@@ -18,14 +18,15 @@ Use this skill when:
 
 1. Read the specification file
 2. Identify all distinct components and features
-3. Create a task list for sequential implementation, save the tasks and descriptions in a `task-list.md` file
+3. Create a task list for sequential implementation
 4. Write a `task-N.md` file for each task with:
    - Task overview
    - Dependencies (preceding tasks)
    - External libraries required
    - Pseudo code for main flow
    - File structure
-   - Acceptance criteria
+   - Acceptance criteria and Unit tests plan
+5. save the tasks and descriptions in a `task-list.md` file with all the external dependencies listed
 
 ## Output Format
 

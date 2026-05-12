@@ -1,43 +1,50 @@
-# Task 3: File Upload Component
+# Task 3: PDF to Image Conversion
 
 ## Task Overview
-Implement a drag-and-drop zone that allows users to upload multiple PDF and image files.
+Implement PDF to image conversion in the browser with local storage caching.
 
 ## Dependencies
-- Task 1: Project Setup and Dependencies
+Task 1: Project Setup, Task 2: File Upload Component
 
 ## External Libraries Required
 | Library | Version | Purpose |
 |---------|---------|---------|
-| react-dropzone | ^14.x | Drag and drop file upload component |
+| pdfjs-dist | ^4.0.379 | PDF rendering in browser |
+| pdf-lib | ^1.17.1 | PDF metadata extraction |
 
 ## Pseudo Code - Main Flow
-
 ```
-1. Create FileUpload component using react-dropzone
-2. Configure dropzone to accept:
-   - PDF files (*.pdf, application/pdf)
-   - Image files (*.image/*)
-   - Multiple files allowed
-3. On file drop:
-   - Validate file types
-   - Add files to state management
-   - Trigger preview generation
-4. Display visual feedback:
-   - "Drop files here" message when idle
-   - Highlight border when dragging over
-5. Support both drag-and-drop and click-to-upload
+1. Create pdfToImages function
+   - Load PDF using pdfjs-dist
+   - Render each page to canvas at 2x resolution
+   - Convert canvas to PNG blob
+   - Return array of image blobs
+
+2. Create usePdfCache hook
+   - Check localStorage for cached images
+   - If cache hit, return cached images
+   - If cache miss, convert PDF and store in localStorage
+   - Use file hash as cache key
+
+3. Create convertAndCache function
+   - Generate hash from file content
+   - Check localStorage for existing cache
+   - If not found, convert and store
+   - Return image blobs array
 ```
 
 ## File Structure
 ```
-/components
-  /FileUpload.tsx     - Drag and drop file upload component
+/src/lib
+  pdfConverter.ts
+  pdfCache.ts
+/hooks
+  usePdfCache.ts
 ```
 
 ## Acceptance Criteria
-- [ ] Drag and drop zone accepts PDF and image files
-- [ ] Multiple files can be uploaded at once
-- [ ] Visual feedback when dragging files over the zone
-- [ ] Click to upload also works
-- [ ] Invalid file types are rejected with feedback
+- [ ] PDF files are converted to image blobs
+- [ ] Images are cached in localStorage by file hash
+- [ ] Cached images load without re-conversion
+- [ ] Multiple PDF pages are handled correctly
+- [ ] Canvas resolution is 2x for quality

@@ -1,45 +1,52 @@
-# Task 4: File List Sidebar
+# Task 4: Image Preview with Navigator
 
 ## Task Overview
-Create the file list sidebar (20% width) that displays all uploaded filenames, allows selection by clicking, and removal by clicking X.
+Create image preview component with PDF page navigation and status bar showing metadata.
 
 ## Dependencies
-- Task 2: UI Layout
-- Task 3: File Upload Component
+Task 1: Project Setup, Task 2: File Upload Component, Task 3: PDF to Image Conversion
 
 ## External Libraries Required
 None
 
 ## Pseudo Code - Main Flow
-
 ```
-1. Create FileList component
-2. Render a vertical list of uploaded files
-3. Each file item displays:
-   - Filename (truncated if too long)
-   - File type icon (PDF vs image)
-   - X button for removal
-4. On file name click:
-   - Set selected file in state
-   - Trigger preview display
-5. On X click:
-   - Remove file from state
-   - Clear preview if removed file was selected
-6. Add visual styling:
-   - Selected file highlighted
-   - Hover effects on items
-7. Handle empty state: "No files uploaded"
+1. Create ImagePreview component (80% width)
+   - Accept image blob and current page info
+   - Display image with object-fit: contain
+   - Maintain aspect ratio
+
+2. Create PageNavigator component
+   - Show "Page X of Y" indicator
+   - < and > buttons for prev/next
+   - Disable buttons at boundaries
+   - Handle page change callbacks
+
+3. Create PreviewArea component
+   - Check if current file is PDF or image
+   - If PDF: show PageNavigator + ImagePreview
+   - If image: show ImagePreview only
+   - Handle page navigation state
+
+4. Create StatusBar component
+   - Display image dimensions (height x width)
+   - Display file size in KB/MB
+   - Fixed at bottom of Preview section
 ```
 
 ## File Structure
 ```
-/components
-  /FileList.tsx       - File list sidebar component
+/src/components
+  /preview
+    ImagePreview.tsx
+    PageNavigator.tsx
+    PreviewArea.tsx
+    StatusBar.tsx
 ```
 
 ## Acceptance Criteria
-- [ ] Sidebar width is 20% of Preview section
-- [ ] All uploaded filenames displayed in a list
-- [ ] Click on filename selects the file (visual highlight)
-- [ ] X button removes file from list
-- [ ] Empty state shows placeholder message
+- [ ] Images display correctly with proper aspect ratio
+- [ ] PDF pages can be navigated with < > buttons
+- [ ] Page indicator shows correct X of Y
+- [ ] Status bar shows width, height, and file size
+- [ ] Buttons disable appropriately at boundaries

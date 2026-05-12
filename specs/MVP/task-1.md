@@ -1,57 +1,52 @@
-# Task 1: Project Setup and Dependencies
+# Task 1: Project Setup
 
 ## Task Overview
-Initialize the Next.js project and install all required dependencies for the VLM bounding box demo application.
+Set up the Next.js project with all required dependencies and folder structure.
 
 ## Dependencies
-None
+None (this is the first task)
 
 ## External Libraries Required
 | Library | Version | Purpose |
 |---------|---------|---------|
-| next | 14.x | React framework |
-| react | 18.x | UI library |
-| react-dropzone | ^14.x | Drag and drop file upload |
-| pdfjs-dist | ^4.x | PDF rendering and conversion to images |
-| react-markdown | ^9.x | Markdown editor for prompt input |
+| next | 14+ | Framework |
+| react | 18+ | UI library |
+| typescript | 5+ | Type safety |
+| pdf-lib | ^1.17.1 | PDF manipulation |
+| pdfjs-dist | ^4.0.379 | PDF rendering (browser) |
+| react-dropzone | ^14.2.3 | Drag & drop file upload |
+| @uiw/react-md-editor | ^4.0.0 | Markdown editor |
+| axios | ^1.6.0 | HTTP client |
+| zustand | ^4.4.0 | State management |
 
 ## Pseudo Code - Main Flow
-
 ```
 1. Initialize Next.js project with TypeScript
-2. Install dependencies:
-   - react-dropzone for file upload
-   - pdfjs-dist for PDF to image conversion
-   - react-markdown for prompt editor
+2. Install all external libraries
 3. Create folder structure:
-   - /app - Next.js app router pages
-   - /components - React components
-   - /lib - Utility functions
-   - /types - TypeScript types
-4. Configure PDF.js worker
-5. Set up basic Tailwind CSS configuration
+   - src/app/
+   - src/components/
+   - src/lib/
+   - src/store/
+4. Set up Zustand store for app state
+5. Create base CSS/styles
 ```
 
 ## File Structure
 ```
-/app
-  /page.tsx           - Main page entry
-  /layout.tsx         - Root layout
-  /globals.css        - Global styles
-/components
-  /FileUpload.tsx     - Drag and drop zone
-  /FileList.tsx       - Sidebar file list
-  /ImagePreview.tsx   - Image preview with bboxes
-  /PromptEditor.tsx   - Markdown prompt input
-  /MetadataBar.tsx    - Image metadata display
-  /BoundingBox.tsx    - Bbox overlay component
-/lib
-  /pdfUtils.ts        - PDF conversion utilities
-  /types.ts           - TypeScript interfaces
+/src
+  /app
+    layout.tsx
+    page.tsx
+    globals.css
+  /components
+  /lib
+  /store
+    useAppStore.ts
 ```
 
 ## Acceptance Criteria
-- [ ] Next.js 14 project with TypeScript compiles without errors
-- [ ] All required packages installed successfully
-- [ ] PDF.js worker configured for client-side PDF rendering
-- [ ] Basic folder structure created
+- [ ] Next.js app runs without errors
+- [ ] All libraries installed successfully
+- [ ] Folder structure matches spec
+- [ ] Zustand store is created with proper types
