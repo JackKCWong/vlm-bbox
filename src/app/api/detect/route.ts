@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 
+const DASHSCOPE_BASE_URL = process.env.OPENAI_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+
 export async function POST(request: NextRequest) {
   try {
     const formData = await request.formData();
@@ -34,12 +36,34 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'At least one image is required' }, { status: 400 });
     }
 
-    const VLM_ENDPOINT = process.env.VLM_ENDPOINT || 'http://localhost:8000/vlm/detect';
+    const apiKey = process.env.OPENAI_API_KEY;
+    if (!apiKey) {
+      return NextResponse.json({ error: 'OPENAI_API_KEY is not configured' }, { status: 500 });
+    }
 
-    const vlmResponse = await fetch(VLM_ENDPOINT, {
+    const messages = [
+      {
+        role: 'user',
+        content: [
+          { type: 'text', text: prompt },
+          ...images.map(img => ({
+            type: 'image_url',
+            image_url: { url: img.data },
+          })),
+        ],
+      },
+    ];
+
+    const vlmResponse = await fetch(`${DASHSCOPE_BASE_URL}/responses`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ images, prompt }),
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${apiKey}`,
+      },
+      body: JSON.stringify({
+        model: 'qwen-vl-plus',
+        input: { messages },
+      }),
     });
 
     if (!vlmResponse.ok) {
