@@ -1,5 +1,12 @@
 import { create } from 'zustand';
 
+export interface UploadedFile {
+  id: string;
+  name: string;
+  file: File;
+  type: 'pdf' | 'image';
+}
+
 interface BBox {
   page: number;
   x: number;
@@ -19,6 +26,8 @@ interface AppState {
   isLoading: boolean;
   error: string | null;
   selectedBBox: number | null;
+  uploadedFiles: UploadedFile[];
+  selectedFileId: string | null;
   setPdfDoc: (doc: unknown | null) => void;
   setPdfBytes: (bytes: Uint8Array | null) => void;
   setCurrentPage: (page: number) => void;
@@ -31,6 +40,9 @@ interface AppState {
   setIsLoading: (loading: boolean) => void;
   setError: (error: string | null) => void;
   setSelectedBBox: (index: number | null) => void;
+  addUploadedFile: (file: UploadedFile) => void;
+  removeUploadedFile: (id: string) => void;
+  setSelectedFileId: (id: string | null) => void;
   reset: () => void;
 }
 
@@ -44,6 +56,8 @@ export const useAppStore = create<AppState>((set) => ({
   isLoading: false,
   error: null,
   selectedBBox: null,
+  uploadedFiles: [],
+  selectedFileId: null,
   setPdfDoc: (doc) => set({ pdfDoc: doc }),
   setPdfBytes: (bytes) => set({ pdfBytes: bytes }),
   setCurrentPage: (page) => set({ currentPage: page }),
@@ -60,6 +74,14 @@ export const useAppStore = create<AppState>((set) => ({
   setIsLoading: (isLoading) => set({ isLoading }),
   setError: (error) => set({ error }),
   setSelectedBBox: (selectedBBox) => set({ selectedBBox }),
+  addUploadedFile: (file) =>
+    set((state) => ({ uploadedFiles: [...state.uploadedFiles, file] })),
+  removeUploadedFile: (id) =>
+    set((state) => ({
+      uploadedFiles: state.uploadedFiles.filter((f) => f.id !== id),
+      selectedFileId: state.selectedFileId === id ? null : state.selectedFileId,
+    })),
+  setSelectedFileId: (id) => set({ selectedFileId: id }),
   reset: () =>
     set({
       pdfDoc: null,
@@ -71,5 +93,7 @@ export const useAppStore = create<AppState>((set) => ({
       isLoading: false,
       error: null,
       selectedBBox: null,
+      uploadedFiles: [],
+      selectedFileId: null,
     }),
 }));

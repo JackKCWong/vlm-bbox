@@ -180,4 +180,86 @@ describe('useAppStore', () => {
       expect(state.selectedBBox).toBeNull();
     });
   });
+
+  describe('uploadedFiles management', () => {
+    it('should have empty uploadedFiles initially', () => {
+      expect(useAppStore.getState().uploadedFiles).toEqual([]);
+    });
+
+    it('should have null selectedFileId initially', () => {
+      expect(useAppStore.getState().selectedFileId).toBeNull();
+    });
+
+    it('should add an uploaded file', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      const uploadedFile = {
+        id: '123',
+        name: 'test.pdf',
+        file: mockFile,
+        type: 'pdf' as const,
+      };
+      useAppStore.getState().addUploadedFile(uploadedFile);
+      expect(useAppStore.getState().uploadedFiles).toHaveLength(1);
+      expect(useAppStore.getState().uploadedFiles[0].name).toBe('test.pdf');
+    });
+
+    it('should remove an uploaded file by id', () => {
+      const mockFile1 = new File(['test1'], 'test1.pdf', { type: 'application/pdf' });
+      const mockFile2 = new File(['test2'], 'test2.jpg', { type: 'image/jpeg' });
+      useAppStore.getState().addUploadedFile({
+        id: '1',
+        name: 'test1.pdf',
+        file: mockFile1,
+        type: 'pdf',
+      });
+      useAppStore.getState().addUploadedFile({
+        id: '2',
+        name: 'test2.jpg',
+        file: mockFile2,
+        type: 'image',
+      });
+      useAppStore.getState().removeUploadedFile('1');
+      expect(useAppStore.getState().uploadedFiles).toHaveLength(1);
+      expect(useAppStore.getState().uploadedFiles[0].id).toBe('2');
+    });
+
+    it('should clear selectedFileId when removing selected file', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      useAppStore.getState().addUploadedFile({
+        id: '1',
+        name: 'test.pdf',
+        file: mockFile,
+        type: 'pdf',
+      });
+      useAppStore.getState().setSelectedFileId('1');
+      expect(useAppStore.getState().selectedFileId).toBe('1');
+      useAppStore.getState().removeUploadedFile('1');
+      expect(useAppStore.getState().selectedFileId).toBeNull();
+    });
+
+    it('should set selectedFileId', () => {
+      useAppStore.getState().setSelectedFileId('123');
+      expect(useAppStore.getState().selectedFileId).toBe('123');
+    });
+
+    it('should clear selectedFileId when set to null', () => {
+      useAppStore.getState().setSelectedFileId('123');
+      useAppStore.getState().setSelectedFileId(null);
+      expect(useAppStore.getState().selectedFileId).toBeNull();
+    });
+
+    it('should reset uploadedFiles and selectedFileId on reset', () => {
+      const mockFile = new File(['test'], 'test.pdf', { type: 'application/pdf' });
+      useAppStore.getState().addUploadedFile({
+        id: '1',
+        name: 'test.pdf',
+        file: mockFile,
+        type: 'pdf',
+      });
+      useAppStore.getState().setSelectedFileId('1');
+      useAppStore.getState().reset();
+      expect(useAppStore.getState().uploadedFiles).toEqual([]);
+      expect(useAppStore.getState().selectedFileId).toBeNull();
+    });
+  });
 });
