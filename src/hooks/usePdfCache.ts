@@ -15,11 +15,8 @@ export function usePdfCache(): UsePdfCacheReturn {
   const [error, setError] = useState<string | null>(null);
   const [currentFileHash, setCurrentFileHash] = useState<string | null>(null);
 
-  const generateHash = async (file: File): Promise<string> => {
-    const buffer = await file.arrayBuffer();
-    const hashBuffer = await crypto.subtle.digest('SHA-256', buffer);
-    const hashArray = Array.from(new Uint8Array(hashBuffer));
-    return hashArray.map((b) => b.toString(16).padStart(2, '0')).join('');
+  const getFileHash = (file: File): string => {
+    return `${file.name}_${file.size}_${file.lastModified}`;
   };
 
   const loadPdf = useCallback(async (file: File) => {
@@ -27,18 +24,18 @@ export function usePdfCache(): UsePdfCacheReturn {
     setError(null);
 
     try {
-      const hash = await generateHash(file);
+      const hash = getFileHash(file);
 
       if (hash === currentFileHash && images.length > 0) {
         setIsLoading(false);
         return;
       }
 
-      let cachedImages = await getCachedImages(file);
+      let cachedImages = getCachedImages(file);
 
       if (!cachedImages) {
         cachedImages = await pdfToImages(file, 2);
-        await setCachedImages(file, cachedImages);
+        setCachedImages(file, cachedImages);
       }
 
       setImages(cachedImages);
