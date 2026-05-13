@@ -1,6 +1,7 @@
 import { useState, useCallback } from 'react';
 import { PDFPageImage, pdfToImages } from '@/lib/pdfConverter';
 import { getCachedImages, setCachedImages } from '@/lib/pdfCache';
+import { useAppStore } from '@/store/useAppStore';
 
 interface UsePdfCacheReturn {
   images: PDFPageImage[];
@@ -14,6 +15,7 @@ export function usePdfCache(): UsePdfCacheReturn {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [currentFileHash, setCurrentFileHash] = useState<string | null>(null);
+  const setPdfImages = useAppStore((state) => state.setPdfImages);
 
   const getFileHash = (file: File): string => {
     return `${file.name}_${file.size}_${file.lastModified}`;
@@ -40,13 +42,14 @@ export function usePdfCache(): UsePdfCacheReturn {
 
       setImages(cachedImages);
       setCurrentFileHash(hash);
+      setPdfImages(cachedImages);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to load PDF');
       setImages([]);
     } finally {
       setIsLoading(false);
     }
-  }, [currentFileHash, images.length]);
+  }, [currentFileHash, images.length, setPdfImages]);
 
   return { images, isLoading, error, loadPdf };
 }

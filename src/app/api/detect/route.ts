@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
+import OpenAI from 'openai';
 
-const DASHSCOPE_BASE_URL = process.env.OPENAI_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1';
+const dashscope = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
+  baseURL: process.env.OPENAI_BASE_URL || 'https://dashscope.aliyuncs.com/compatible-mode/v1',
+});
 
 export async function POST(request: NextRequest) {
   try {
@@ -37,9 +41,14 @@ export async function POST(request: NextRequest) {
     }
 
     const apiKey = process.env.OPENAI_API_KEY;
+    const model = process.env.OPENAI_MODEL || 'qwen3.6-plus';
     if (!apiKey) {
       return NextResponse.json({ error: 'OPENAI_API_KEY is not configured' }, { status: 500 });
     }
+
+    console.log('[detect] Received prompt:', prompt);
+    console.log('[detect] Received images count:', images.length);
+    console.log('[detect] Image sizes:', images.map(img => ({ width: img.width, height: img.height, dataLength: img.data.length })));
 
     const messages = [
       {
@@ -54,30 +63,19 @@ export async function POST(request: NextRequest) {
       },
     ];
 
-    const vlmResponse = await fetch(`${DASHSCOPE_BASE_URL}/responses`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${apiKey}`,
-      },
-      body: JSON.stringify({
-        model: 'qwen-vl-plus',
-        input: { messages },
-      }),
+    console.log('[detect] Full URL:', dashscope.baseURL);
+    console.log('[detect] Model:', model);
+    console.log('[detect] Request body:', JSON.stringify({ model, input: { messages } }, null, 2));
+
+    const vlmResponse = await dashscope.responses.create({
+      model,
+      input: { messages },
     });
 
-    if (!vlmResponse.ok) {
-      const errorText = await vlmResponse.text();
-      return NextResponse.json(
-        { error: `VLM request failed: ${vlmResponse.status}`, details: errorText },
-        { status: 502 }
-      );
-    }
-
-    const result = await vlmResponse.json();
-    return NextResponse.json(result);
+    console.log('[detect] VLM response:', JSON.stringify(vlmResponse, null, 2));
+    return NextResponse.json(vlmResponse);
   } catch (error) {
-    console.error('API route error:', error);
+    console.error('[detect] API route error:', error);
     return NextResponse.json(
       { error: 'Internal server error' },
       { status: 500 }

@@ -28,6 +28,7 @@ interface AppState {
   selectedBBox: number | null;
   uploadedFiles: UploadedFile[];
   selectedFileId: string | null;
+  pdfImages: { blob: Blob; width: number; height: number }[];
   setPdfDoc: (doc: unknown | null) => void;
   setPdfBytes: (bytes: Uint8Array | null) => void;
   setCurrentPage: (page: number) => void;
@@ -43,6 +44,7 @@ interface AppState {
   addUploadedFile: (file: UploadedFile) => void;
   removeUploadedFile: (id: string) => void;
   setSelectedFileId: (id: string | null) => void;
+  setPdfImages: (images: { blob: Blob; width: number; height: number }[]) => void;
   reset: () => void;
 }
 
@@ -58,6 +60,7 @@ export const useAppStore = create<AppState>((set) => ({
   selectedBBox: null,
   uploadedFiles: [],
   selectedFileId: null,
+  pdfImages: [],
   setPdfDoc: (doc) => set({ pdfDoc: doc }),
   setPdfBytes: (bytes) => set({ pdfBytes: bytes }),
   setCurrentPage: (page) => set({ currentPage: page }),
@@ -82,6 +85,7 @@ export const useAppStore = create<AppState>((set) => ({
       selectedFileId: state.selectedFileId === id ? null : state.selectedFileId,
     })),
   setSelectedFileId: (id) => set({ selectedFileId: id }),
+  setPdfImages: (images) => set({ pdfImages: images }),
   reset: () =>
     set({
       pdfDoc: null,
